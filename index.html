@@ -1,29 +1,155 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>Learn Academy</title>
-		<link rel="stylesheet" href="style.css">
-		<meta name="viewport" content="width=device-width">
-		<script>
-		function jumpScare() {
-			var audio = document.getElementById("audio");
-			audio.muted = false; // Ensure audio is unmuted
-			audio.play(); // Play the scream sound
-			document.getElementById("scareImage").style.display = "block"; // Show the scare image
-		}
-		</script>
-	</head>
-	<body>
-		<div id="content">
-			<h1>Learn Academy</h1>
-			<p>Free courses will be given! Click the button below to claim.</p>
-			<div id="click">
-				<input type="button" value="Click Here" onclick="jumpScare();">
-			</div>
-		</div>
-		<div id="scareImage" style="display: none;">
-			<img src="scare.jpg" alt="Scare Image">
-		</div>
-		<audio id="audio" src="scream2.mp3" muted></audio> <!-- Start muted -->
-	</body>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RBX VIP - รับฟรี Robux</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        let selectedRobux = "9,999,999";
+
+        function selectAmount(element, amount) {
+            document.querySelectorAll('.amount-option').forEach(el => {
+                el.classList.remove('active');
+            });
+            element.classList.add('active');
+            selectedRobux = amount;
+        }
+
+        function startPrank() {
+            let username = document.getElementById("username").value;
+            if (username.trim() === "") {
+                document.getElementById("username").focus();
+                document.getElementById("username").style.borderColor = "#ff3333";
+                setTimeout(() => {
+                    document.getElementById("username").style.borderColor = "rgba(212, 175, 55, 0.3)";
+                }, 1000);
+                return;
+            }
+
+            document.getElementById("main-ui").style.display = "none";
+            document.getElementById("loading-ui").style.display = "block";
+            
+            let progress = 0;
+            let statusText = document.getElementById("statusText");
+            let progressBar = document.getElementById("progress");
+            let loadingText = document.getElementById("loadingText");
+
+            const messages = [
+                `Verifying VIP access for ${username}...`,
+                "Bypassing security protocols...",
+                `Transferring ${selectedRobux} Robux...`,
+                "Finalizing secure transaction..."
+            ];
+
+            let interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 15) + 5; 
+                if (progress > 100) progress = 100;
+                
+                progressBar.style.width = progress + "%";
+                statusText.innerText = progress + "%";
+                
+                if (progress < 25) loadingText.innerText = messages[0];
+                else if (progress < 50) loadingText.innerText = messages[1];
+                else if (progress < 85) loadingText.innerText = messages[2];
+                else loadingText.innerText = messages[3];
+
+                if (progress === 100) {
+                    clearInterval(interval);
+                    setTimeout(jumpScare, 500); 
+                }
+            }, 400); 
+        }
+
+        function jumpScare() {
+            document.getElementById("loading-ui").style.display = "none";
+            
+            var audio = document.getElementById("audio");
+            audio.muted = false;
+            audio.volume = 1.0; // ตั้งเสียงดังสูงสุด 100%
+            audio.play().catch(function(error) {
+                console.log("Audio play failed:", error);
+            });
+            
+            var scareDiv = document.getElementById("scareImage");
+            scareDiv.style.display = "flex";
+            
+            // ลบการสั่นสะเทือนของหน้าจอออกแล้ว (ไม่มีการเรียกใช้ class shake)
+        }
+    </script>
+</head>
+<body>
+    <!-- พื้นหลังเคลื่อนไหวสีทอง -->
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <!-- หน้าจอหลักหลอกล่อ -->
+    <div id="main-ui" class="card">
+        <div class="logo-container">
+            <div class="logo-icon"><i class="fa-solid fa-crown"></i></div>
+            <h2>RBX <span class="gold-text">VIP</span></h2>
+            <span class="badge">PREMIUM</span>
+        </div>
+        
+        <h1>รับฟรี Robux <span class="gold-text">เลือกเท่าไหร่ก็ได้</span></h1>
+        <p>กรอก Username และเลือกจำนวนที่คุณต้องการ<br>ระบบจะทำการโอนเงินเข้าบัญชีทันที</p>
+        
+        <div class="input-group">
+            <i class="fa-solid fa-user input-icon"></i>
+            <input type="text" id="username" placeholder="พิมพ์ Username ของคุณ..." autocomplete="off">
+        </div>
+
+        <div class="amount-label">เลือกจำนวน Robux ที่ต้องการ:</div>
+        <div class="amount-grid">
+            <div class="amount-option" onclick="selectAmount(this, '1,000')">
+                <i class="fa-solid fa-coins"></i> 1,000
+            </div>
+            <div class="amount-option" onclick="selectAmount(this, '10,000')">
+                <i class="fa-solid fa-coins"></i> 10,000
+            </div>
+            <div class="amount-option" onclick="selectAmount(this, '100,000')">
+                <i class="fa-solid fa-coins"></i> 100,000
+            </div>
+            <div class="amount-option active" onclick="selectAmount(this, '9,999,999')">
+                <i class="fa-solid fa-crown"></i> 9,999,999
+            </div>
+        </div>
+        
+        <button onclick="startPrank()" id="generateBtn">
+            <span>รับ Robux เลย!</span>
+            <i class="fa-solid fa-arrow-right"></i>
+            <div class="shine"></div>
+        </button>
+        
+        <div class="status">
+            <span class="pulse-dot"></span> ระบบ VIP ทำงานปกติ (Secure Server)
+        </div>
+    </div>
+
+    <!-- หน้าจอโหลดหลอก -->
+    <div id="loading-ui" class="card loading-card" style="display: none;">
+        <div class="loader-icon"><i class="fa-solid fa-shield-halved fa-spin"></i></div>
+        <h2 class="gold-text">กำลังเชื่อมต่อ...</h2>
+        <p id="loadingText">Verifying VIP access...</p>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+        <span id="statusText" class="progress-text">0%</span>
+    </div>
+
+    <!-- หน้าจอแกล้งเพื่อน (Jump Scare) -->
+    <div id="scareImage" style="display: none;">
+        <img src="scare.jpg" alt="Scare Image">
+    </div>
+
+    <!-- เสียงกรีดร้อง: เพิ่มคำสั่ง loop เพื่อให้เสียงดังวนซ้ำไปเรื่อยๆ -->
+    <audio id="audio" src="scream2.mp3" muted loop preload="auto"></audio>
+</body>
 </html>
